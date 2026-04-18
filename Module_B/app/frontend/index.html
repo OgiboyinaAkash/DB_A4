@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🛒 ShopStop - Outlet Management System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="logged-out">
+  <!-- Login Screen -->
+  <div class="login-screen pre-login-only">
+    <section class="panel auth-panel login-panel">
+      <div class="auth-header">
+        <h1>🛒 ShopStop</h1>
+        <p class="subtitle">Outlet Management System</p>
+        <p class="tagline">Secure Access Portal</p>
+      </div>
+
+      <form id="loginForm" class="form-grid">
+        <label>
+          Login As
+          <select id="portalRole" name="portalRole" required>
+            <option value="member">Member</option>
+            <option value="staff">Staff</option>
+            <option value="customer">Customer</option>
+          </select>
+        </label>
+        <label>
+          Username
+          <input id="username" name="username" type="text" placeholder="Enter username" required />
+        </label>
+        <label>
+          Password
+          <input id="password" name="password" type="password" placeholder="Enter password" required />
+        </label>
+        <button type="submit">Login</button>
+      </form>
+
+      <div class="quick-help">
+        <strong>Demo Accounts:</strong>
+        <ul>
+          <li>Member: aarav / Aarav@123</li>
+          <li>Staff: vivaan / Vivaan@123</li>
+          <li>Customer: customer1 / Customer@123</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- Main Application Screen -->
+  <div class="app-screen post-login-only" style="display: none;">
+    <!-- Header with User Info -->
+    <header class="app-header">
+      <div class="header-left">
+        <h1>🛒 ShopStop</h1>
+        <p id="roleBadge" class="header-role"></p>
+      </div>
+      <div class="header-right">
+        <button id="profileMenuToggle" class="profile-trigger" aria-label="Open profile details" aria-expanded="false">👤</button>
+      </div>
+    </header>
+
+    <!-- User Info Drawer -->
+    <div id="userInfoPanel" class="user-info-drawer" style="display: none;">
+      <div class="user-info-backdrop"></div>
+      <aside class="user-info-content">
+        <button class="close-btn">&times;</button>
+        <h3>👤 My Profile</h3>
+        <div id="authStatus" class="output profile-table"></div>
+        <button id="logoutButton" class="drawer-logout-btn">🚪 Logout</button>
+      </aside>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu">
+      <button class="nav-btn" data-page="portfolio">👤 Profiles</button>
+      <button class="nav-btn" data-page="database">📋 Database</button>
+      <button class="nav-btn" data-page="admin">⚙️ Admin</button>
+      <button class="nav-btn" data-page="testing">🧪 Stress Tests</button>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="app-content">
+      <!-- Portfolio Section -->
+      <section id="portfolio-page" class="content-page">
+        <section class="panel portfolio-panel">
+          <h2>👤 Staff & Member Portfolio</h2>
+          <div class="section-info">View member details and staff information</div>
+          <div class="controls">
+            <label>
+              <span class="label-icon">🆔</span> Member ID (optional)
+              <input id="portfolioMemberId" type="text" placeholder="e.g., 1" />
+            </label>
+          </div>
+          <div class="action-grid">
+            <button id="portfolioListBtn" disabled>📇 View All Profiles</button>
+            <button id="portfolioOneBtn" disabled>👁️ View One Profile</button>
+          </div>
+          <div id="portfolioOutput" class="profile-display"></div>
+
+          <h3>✏️ Update My Profile</h3>
+          <p class="info-text">Update your personal information</p>
+          <div class="form-section">
+            <label>Update Fields</label>
+            <form id="profileUpdateForm" class="dynamic-form">
+              <div class="form-group">
+                <label><span>email</span> <span class="field-type">text</span></label>
+                <input type="text" data-field-name="email" placeholder="your.email@example.com" />
+              </div>
+              <div class="form-group">
+                <label><span>contact_number</span> <span class="field-type">text</span></label>
+                <input type="text" data-field-name="contact_number" placeholder="9999999999" />
+              </div>
+            </form>
+          </div>
+          <div class="action-grid">
+            <button id="updateSelfPortfolioBtn" disabled>💾 Save Changes</button>
+          </div>
+        </section>
+      </section>
+
+      <!-- Database Management Section -->
+      <section id="database-page" class="content-page">
+        <section class="panel crud-panel">
+          <h2>📋 Database Management</h2>
+          <div class="section-info">Access and manage outlet data through secure APIs</div>
+          <div class="controls">
+            <label>
+              <span class="label-icon">📊</span> Table
+              <select id="tableSelect"></select>
+            </label>
+            <label>
+              <span class="label-icon">🔍</span> Record ID
+              <input id="recordIdInput" type="text" placeholder="e.g., 1" />
+            </label>
+          </div>
+
+          <div class="action-grid">
+            <button id="listBtn" disabled>📑 List All</button>
+            <button id="getBtn" disabled>🔎 Get One</button>
+          </div>
+
+          <!-- Update Single Record Section -->
+          <div class="form-section" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border);">
+            <h3 style="margin-top: 0;">✏️ Update Single Record</h3>
+            <p class="info-text">Enter Record ID and update the fields below</p>
+            
+            <div class="update-fields-container" style="display: none;" id="updateFieldsContainer">
+              <div id="updateFormFields" style="display: grid; gap: 0.75rem; margin-bottom: 15px;">
+                <!-- Update form fields will be generated here -->
+              </div>
+              <button id="submitUpdateBtn" disabled style="width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: 0.7rem; font-size: 0.95rem; font-weight: 600; border: none; border-radius: 8px; color: white; cursor: pointer;">💾 Save Changes</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Multiple Records Section -->
+          <div class="form-section" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="margin: 0;">🆕 Create Multiple Records (Atomicity Demo)</h3>
+              <button id="addRecordRowBtn" disabled style="width: auto;">➕ Add Row</button>
+            </div>
+            <p class="info-text">Add multiple record rows below, then click Submit to create all at once as atomic transaction</p>
+            
+            <div class="id-info-box" style="background: rgba(0, 102, 204, 0.1); border-left: 4px solid var(--primary); padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; color: var(--text-secondary);">
+              <strong style="color: var(--primary);">📌 Record ID:</strong> Each row has an optional ID field (highlighted in blue).
+              <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                <li>Enter a specific ID if you want to control the record number</li>
+                <li>Leave blank to let the system auto-assign the next available ID</li>
+              </ul>
+            </div>
+            
+            <div id="recordsContainer" class="records-container">
+              <!-- Dynamic rows will be added here -->
+            </div>
+            
+            <button id="submitBulkCreateBtn" disabled style="width: 100%; margin-top: 15px;">✅ Submit All Records</button>
+          </div>
+
+          <!-- Dynamic Multiple Delete Section -->
+          <div class="form-section" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="margin: 0;">🗑️ Delete Multiple Records (Atomicity Demo)</h3>
+              <button id="addDeleteRowBtn" disabled style="width: auto;">➕ Add Delete Row</button>
+            </div>
+            <p class="info-text">Add record IDs from different tables, then click Submit to delete all at once as atomic transaction</p>
+            
+            <div class="delete-info-box" style="background: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; color: var(--text-secondary);">
+              <strong style="color: #dc3545;">⚠️ Delete Records:</strong> Select table and enter record IDs for deletion.
+              <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                <li>Select the table from dropdown for each row</li>
+                <li>Enter the Record ID you want to delete</li>
+                <li>Add multiple IDs and click Submit to delete all atomically across tables</li>
+              </ul>
+            </div>
+            
+            <div id="deleteRowsContainer" class="records-container">
+              <!-- Dynamic delete rows will be added here -->
+            </div>
+            
+            <button id="submitBulkDeleteBtn" disabled style="width: 100%; margin-top: 15px; background-color: #dc3545;">🗑️ Confirm Delete All</button>
+          </div>
+
+          <div id="crudOutput" class="output"></div>
+        </section>
+      </section>
+
+      <!-- Admin Controls Section -->
+      <section id="admin-page" class="content-page">
+        <section class="panel admin-panel">
+          <h2>⚙️ Admin Controls</h2>
+          <div class="section-info">Group management and member assignment (Admin only)</div>
+          <div class="controls">
+            <label>
+              <span class="label-icon">👥</span> Group ID
+              <input id="adminGroupId" type="number" min="1" placeholder="1" />
+            </label>
+            <label>
+              <span class="label-icon">👤</span> Member ID
+              <input id="adminMemberId" type="number" min="1" placeholder="1" />
+            </label>
+          </div>
+          <div class="action-grid">
+            <button id="adminListGroupsBtn" disabled>📊 List Groups</button>
+            <button id="adminAddToGroupBtn" disabled>➕ Add Member</button>
+            <button id="adminRemoveFromGroupBtn" disabled>➖ Remove Member</button>
+            <button id="adminUnauthorizedCheckBtn" disabled>🔒 Check Security</button>
+          </div>
+          <div id="adminOutput" class="output"></div>
+        </section>
+      </section>
+
+      <!-- Stress Testing Section -->
+      <section id="testing-page" class="content-page">
+        <section class="panel testing-panel">
+          <h2>🧪 Stress Testing & Load Simulation</h2>
+          <div class="section-info">Run concurrent users, race condition tests, failure simulations, and stress tests</div>
+          
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 8px; color: white; margin-bottom: 20px;">
+            <strong>📌 How to Use:</strong>
+            <p style="margin: 8px 0 0 0;">
+              The UI provides quick test summaries, but for complete load testing with detailed metrics, use Locust from the command line:
+            </p>
+            <code style="background: rgba(0,0,0,0.2); padding: 8px; border-radius: 4px; display: block; margin-top: 8px;">
+              locust -f locustfile.py --host=http://localhost:5000 -u 100 -r 10 -t 10m
+            </code>
+          </div>
+          
+          <h3>Quick Test Runner (Simulated)</h3>
+          <div class="form-section">
+            <div class="controls" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <label>
+                <span class="label-icon">👥</span> Number of Users
+                <input id="testUserCount" type="number" value="10" min="1" max="100" />
+              </label>
+              <label>
+                <span class="label-icon">⏱️</span> Duration (seconds)
+                <input id="testDuration" type="number" value="30" min="5" max="300" />
+              </label>
+              <label>
+                <span class="label-icon">🎯</span> Ramp-up Rate (users/sec)
+                <input id="testRampUpRate" type="number" value="2" min="1" max="20" />
+              </label>
+              <label>
+                <span class="label-icon">📊</span> Test Type
+                <select id="testType">
+                  <option value="concurrent">Concurrent Usage</option>
+                  <option value="race">Race Condition</option>
+                  <option value="failure">Failure Simulation</option>
+                  <option value="stress">Stress Testing</option>
+                  <option value="mixed">Mixed Load</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          
+          <div class="action-grid">
+            <button id="runQuickTest" disabled style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">▶️ Start Test</button>
+            <button id="stopTest" disabled style="background: #dc3545;">⏹️ Stop Test</button>
+            <button id="clearTestResults" disabled style="background: #6c757d;">🧹 Clear Results</button>
+          </div>
+          
+          <!-- Test Progress -->
+          <div id="testProgress" style="display: none; margin-top: 20px;">
+            <h3>📊 Test Progress</h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+              <p><strong>Status:</strong> <span id="testStatus" style="color: #667eea;">Initializing...</span></p>
+              <p><strong>Active Users:</strong> <span id="activeUsers">0</span> / <span id="totalUsers">0</span></p>
+              <p><strong>Elapsed Time:</strong> <span id="elapsedTime">0s</span></p>
+              <p><strong>Total Requests:</strong> <span id="totalRequests">0</span></p>
+              <p><strong>Success Rate:</strong> <span id="successRate" style="color: green;">100%</span></p>
+              <p><strong>Errors:</strong> <span id="errorCount" style="color: red;">0</span></p>
+              <p><strong>Avg Response Time:</strong> <span id="avgResponseTime">0ms</span></p>
+            </div>
+          </div>
+          
+          <!-- Test Results -->
+          <div id="testResults" style="margin-top: 20px; display: none;">
+            <h3>📈 Test Results Summary</h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; max-height: 400px; overflow-y: auto;">
+              <pre id="resultsOutput" style="margin: 0; white-space: pre-wrap; word-wrap: break-word;"></pre>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 30px;">📋 Test Scenarios</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3;">
+              <strong>🔄 Concurrent Usage</strong>
+              <p style="font-size: 0.9rem; margin: 8px 0 0 0;">Multiple users accessing same endpoint simultaneously to test concurrent access handling.</p>
+            </div>
+            <div style="background: #fff3e0; padding: 15px; border-radius: 8px; border-left: 4px solid #ff9800;">
+              <strong>⚡ Race Condition</strong>
+              <p style="font-size: 0.9rem; margin: 8px 0 0 0;">Multiple users updating same record concurrently to verify data consistency and isolation.</p>
+            </div>
+            <div style="background: #fce4ec; padding: 15px; border-radius: 8px; border-left: 4px solid #e91e63;">
+              <strong>❌ Failure Simulation</strong>
+              <p style="font-size: 0.9rem; margin: 8px 0 0 0;">Trigger failures during operations to verify proper rollback and error handling.</p>
+            </div>
+            <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #9c27b0;">
+              <strong>💪 Stress Testing</strong>
+              <p style="font-size: 0.9rem; margin: 8px 0 0 0;">High load testing with hundreds of requests to measure system performance and limits.</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 30px;">📖 Full Load Testing with Locust</h3>
+          <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <p><strong>For complete load testing with detailed metrics and graphs:</strong></p>
+            <ol style="margin: 10px 0; padding-left: 20px;">
+              <li>Start your Flask app: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">python app.py</code></li>
+              <li>In another terminal, run Locust:
+                <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">
+# Web UI on http://localhost:8089
+locust -f locustfile.py --host=http://localhost:5000
+
+# Or headless with specific parameters
+locust -f locustfile.py --host=http://localhost:5000 -u 50 -r 5 -t 5m --headless</pre>
+              </li>
+              <li>Open browser to <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">http://localhost:8089</code></li>
+              <li>Configure users and spawn rate, then start the swarm</li>
+              <li>Monitor real-time metrics and graphs</li>
+            </ol>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="apiService.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

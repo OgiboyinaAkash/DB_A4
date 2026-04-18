@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-04-04T18:16:37.064844+00:00",
+  "base_url": "http://127.0.0.1:5000",
+  "results": [
+    {
+      "test": "concurrent_usage",
+      "total_requests": 60,
+      "successful_responses": 60,
+      "valid_payload_count": 60,
+      "errors": [],
+      "avg_ms": 84.586,
+      "p95_ms": 156.489,
+      "pass": true
+    },
+    {
+      "test": "race_condition",
+      "updates_attempted": 40,
+      "updates_successful": 40,
+      "errors": [],
+      "final_price": 1234.0,
+      "final_price_numeric": 1234.0,
+      "final_price_matches_one_write": true,
+      "pass": true
+    },
+    {
+      "test": "failure_simulation",
+      "attempt_status": 400,
+      "attempt_elapsed_ms": 60.317,
+      "attempt_failed_as_expected": true,
+      "record_unchanged": true,
+      "pass": true
+    },
+    {
+      "test": "stress_test",
+      "total_requests": 500,
+      "concurrency": 40,
+      "success": 500,
+      "errors": 0,
+      "transport_errors": 0,
+      "avg_ms": 217.56,
+      "p95_ms": 305.886,
+      "throughput_rps": 176.817,
+      "pass": true
+    }
+  ],
+  "summary": {
+    "atomicity": true,
+    "consistency": true,
+    "isolation": true,
+    "durability": true
+  },
+  "overall_pass": true
+}

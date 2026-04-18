@@ -1,0 +1,115 @@
+{
+  "generated_at": "2026-04-17T17:21:17.718889+00:00",
+  "clean_target": true,
+  "source": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "user": "root",
+    "password": "akash",
+    "database": "outlet_management"
+  },
+  "shards": {
+    "0": {
+      "host": "10.0.116.184",
+      "port": 3307,
+      "database": "SELECT___Squad"
+    },
+    "1": {
+      "host": "10.0.116.184",
+      "port": 3308,
+      "database": "SELECT___Squad"
+    },
+    "2": {
+      "host": "10.0.116.184",
+      "port": 3309,
+      "database": "SELECT___Squad"
+    }
+  },
+  "inserted_counts": {
+    "customers": {
+      "0": 5,
+      "1": 5,
+      "2": 5
+    },
+    "sales": {
+      "0": 6,
+      "1": 7,
+      "2": 7
+    },
+    "sale_items": {
+      "0": 9,
+      "1": 14,
+      "2": 7
+    },
+    "payments": {
+      "0": 6,
+      "1": 8,
+      "2": 6
+    }
+  },
+  "source_counts": {
+    "customers": 15,
+    "sales": 20,
+    "sale_items": 30,
+    "payments": 20
+  },
+  "target_counts": {
+    "customers": {
+      "0": 5,
+      "1": 5,
+      "2": 5,
+      "total": 15
+    },
+    "sales": {
+      "0": 6,
+      "1": 7,
+      "2": 7,
+      "total": 20
+    },
+    "sale_items": {
+      "0": 9,
+      "1": 14,
+      "2": 7,
+      "total": 30
+    },
+    "payments": {
+      "0": 6,
+      "1": 8,
+      "2": 6,
+      "total": 20
+    }
+  },
+  "overlap_ids": {
+    "customers": [],
+    "sales": [],
+    "sale_items": [],
+    "payments": []
+  },
+  "integrity": {
+    "customers": {
+      "source_count": 15,
+      "target_count": 15,
+      "no_data_loss": true,
+      "no_duplicate_ids": true
+    },
+    "sales": {
+      "source_count": 20,
+      "target_count": 20,
+      "no_data_loss": true,
+      "no_duplicate_ids": true
+    },
+    "sale_items": {
+      "source_count": 30,
+      "target_count": 30,
+      "no_data_loss": true,
+      "no_duplicate_ids": true
+    },
+    "payments": {
+      "source_count": 20,
+      "target_count": 20,
+      "no_data_loss": true,
+      "no_duplicate_ids": true
+    }
+  },
+  "overall_pass": true
+}

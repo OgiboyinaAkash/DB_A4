@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-04-17T17:21:18.966462+00:00",
+  "sharding_enabled": true,
+  "sharding_info": {
+    "enabled": true,
+    "shard_count": 3,
+    "primary_shard": 0,
+    "sharded_tables": [
+      "customers",
+      "payments",
+      "sale_items",
+      "sales"
+    ],
+    "table_template": "shard_{shard_id}_{table}",
+    "shards": [
+      {
+        "shard_id": 0,
+        "host": "10.0.116.184",
+        "port": 3307,
+        "database": "SELECT___Squad",
+        "user": "SELECT___Squad"
+      },
+      {
+        "shard_id": 1,
+        "host": "10.0.116.184",
+        "port": 3308,
+        "database": "SELECT___Squad",
+        "user": "SELECT___Squad"
+      },
+      {
+        "shard_id": 2,
+        "host": "10.0.116.184",
+        "port": 3309,
+        "database": "SELECT___Squad",
+        "user": "SELECT___Squad"
+      }
+    ]
+  },
+  "lookup_demo": {
+    "table": "customers",
+    "record_id": 1,
+    "expected_shard": 1,
+    "routed_shard": 1,
+    "found": true
+  },
+  "range_query_demo": {
+    "table": "sales",
+    "filters": {
+      "SaleDate": [
+        ">=",
+        "2025-04-01 00:00:00"
+      ]
+    },
+    "target_shards": [
+      0,
+      1,
+      2
+    ],
+    "result_count": 13,
+    "sample_ids": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+    ]
+  },
+  "insert_demo": {
+    "executed": true,
+    "inserted_customer_id": 16,
+    "expected_shard": 1,
+    "routed_shard": 1,
+    "cleanup_deleted": true,
+    "error": null
+  }
+}

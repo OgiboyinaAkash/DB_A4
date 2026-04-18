@@ -1,0 +1,123 @@
+================================================================================
+ACID VALIDATION TEST REPORT
+================================================================================
+
+Total Tests Run: 3
+Failures: 0
+Errors: 0
+
+================================================================================
+
+[1] ATOMICITY TEST
+--------------------------------------------------------------------------------
+Status: ✓ PASSED
+
+Test Description:
+  - Simulates failure during multi-operation transaction
+  - Verifies all changes are rolled back (all-or-nothing principle)
+  - Validates no partial data remains after failure
+  - Confirms table consistency after rollback
+
+Technical Details:
+  Database: acid_test_db (B+ Tree Test Database)
+  Table: product_index (schema: {product_id: int, name: str, price: float, stock_quantity: int})
+  Transaction Operations:
+    1. INSERT: {product_id: 101, name: 'Test Product A', price: 1500.00, stock_quantity: 50}
+    2. INSERT: {product_id: 102, name: 'Test Product B', price: 2500.00, stock_quantity: 30}
+  Failure Injection: After operation 1 (fail_after_ops=1)
+  Actions Verified After Failure:
+    - table.get(101) returns None (Product A not inserted)
+    - table.get(102) returns None (Product B not inserted)
+    - table.verify_consistency() returns True (no data corruption)
+
+Test Results:
+  Failure simulation executed successfully. Verified that all changes were rolled back (no partial data). Table consistency verified after rollback.
+
+================================================================================
+
+[2] CONSISTENCY TEST
+--------------------------------------------------------------------------------
+Status: ✓ PASSED
+
+Test Description:
+  - Tests data validation during transaction execution
+  - Inserts invalid data type (string into integer field)
+  - Verifies transaction automatically reverts on invalid data
+  - Ensures original data is preserved
+  - Confirms data consistency after validation failure
+
+Technical Details:
+  Database: acid_test_db (B+ Tree Test Database)
+  Table: product_index (schema: {product_id: int, name: str, price: float, stock_quantity: int})
+  Setup Phase:
+    - BEGIN TRANSACTION
+    - INSERT: {product_id: 201, name: 'Laptop', price: 50000.00, stock_quantity: 10}
+    - COMMIT (transaction committed and persisted)
+  Validation Test Phase:
+    1. UPDATE: {product_id: 201, price: 45000.00} [VALID]
+    2. UPDATE: {product_id: 201, price: 'invalid_price'} [INVALID - type error]
+  Schema Validation:
+    - Field 'price' expects type: float
+    - Attempted invalid value: 'invalid_price' (str)
+    - Type mismatch detected and transaction rolled back
+  Actions Verified After Rollback:
+    - table.get(201)['price'] == 50000.00 (original value preserved)
+    - Price not updated to 45000.00 (no partial updates)
+    - table.verify_consistency() returns True (no data corruption)
+
+Test Results:
+  Invalid data type detected during transaction. Transaction rolled back automatically. Original data preserved and consistency maintained.
+
+================================================================================
+
+[3] DURABILITY TEST
+--------------------------------------------------------------------------------
+Status: ✓ PASSED
+
+Test Description:
+  - Simulates crash during transaction commit
+  - Uses Write-Ahead Logging (WAL) for recovery
+  - Restarts database and triggers recovery mechanism
+  - Verifies committed data persists after crash recovery
+  - Confirms data integrity after system restart
+
+Technical Details:
+  Database: acid_test_db (B+ Tree Test Database)
+  Table: product_index (schema: {product_id: int, name: str, price: float, stock_quantity: int})
+  Crash Scenario:
+    - BEGIN TRANSACTION
+    - INSERT: {product_id: 301, name: 'Smartphone', price: 15000.00, stock_quantity: 75}
+    - COMMIT with crash simulation: simulate_crash_after_wal=True
+  Write-Ahead Log (WAL) Process:
+    1. Transaction operations prepared
+    2. WAL entry written to persistent log
+    3. System CRASH occurs (RuntimeError simulated)
+    4. In-memory state lost (transaction not yet committed in memory)
+  Recovery Process:
+    1. New DatabaseManager instance created (restart)
+    2. System loads persistence directory
+    3. Recovery mechanism detects incomplete commit in WAL
+    4. WAL entries are replayed to restore state
+    5. Committed data is restored from log
+  Actions Verified After Recovery:
+    - table.get(301) returns committed record
+    - table.get(301)['name'] == 'Smartphone' (data persisted)
+    - table.get(301)['price'] == 15000.00 (data persisted)
+    - table.verify_consistency() returns True (recovery successful)
+
+Test Results:
+  Simulated crash during commit with Write-Ahead Log (WAL). Database restarted and recovery replayed committed WAL. All committed data persisted correctly after recovery.
+
+================================================================================
+
+SUMMARY
+--------------------------------------------------------------------------------
+✓ ALL ACID TESTS PASSED
+
+Conclusion:
+  The database system successfully demonstrates:
+  • Atomicity: Transactions are all-or-nothing (no partial updates)
+  • Consistency: Data validity is maintained (invalid data rejected)
+  • Durability: Committed data survives crashes (persistence verified)
+
+================================================================================

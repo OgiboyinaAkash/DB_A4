@@ -1,0 +1,6 @@
+matplotlib
+graphviz
+Flask
+requests
+PyMySQL
+cryptography
