@@ -518,7 +518,11 @@ def _extract_token():
     auth_header = request.headers.get("Authorization", "")
     if auth_header.startswith("Bearer "):
         return auth_header[7:].strip()
-    return request.headers.get("X-Session-Token", "").strip()
+    token = request.headers.get("X-Session-Token", "").strip()
+    if token:
+        return token
+    # Also check query parameter for compatibility
+    return request.args.get("session_token", "").strip()
 
 
 def _member_groups(member_id):
